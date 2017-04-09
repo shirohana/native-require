@@ -1,0 +1,16 @@
+{
+  "name": "native-require",
+  "version": "0.0.0",
+  "description": "Used to require() external modules in webpack",
+  "main": "index.js",
+  "repository": "https://github.com/shirohana/native-require/",
+  "author": "Hana Shiro <shirohana0608@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "webpack",
+    "require",
+    "node_modules",
+    "node",
+    "externals"
+  ]
+}
