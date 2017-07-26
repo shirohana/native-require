@@ -1,6 +1,6 @@
 {
   "name": "native-require",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Used to require() external modules in webpack",
   "main": "index.js",
   "repository": "https://github.com/shirohana/native-require/",
