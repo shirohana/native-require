@@ -18,16 +18,18 @@ $ npm install --save-dev native-require
 
 #### Use in your code
 ```javascript
-import { join } from 'path'
-import nrequire from 'native-require'
+// Simple use
+const nrequire = require('native-require')
+nrequire('axios')
+nrequire.resolve('axios')
 
-// TODO Update example
-export default function (name) {
-  let filename = join(__dirname, name)
-  return nrequire(filename)
-}
+// Resolve from another dir. (useful in helper modules)
+const nrequire = require('native-require').from(userProvidedBasedir)
+nrequire('axios')
+nrequire.resolve('axios')
 ```
 
 ## API
-- `require(path: String)` : Just like _require()_
-- `require.resolve(request: String)` : Just like _require.resolve()_
+- `nrequire(path: String)` : Require module from `process.cwd()`, just like _require()_
+- `nrequire.resolve(request: String)` : Resolve module dir from `process.cwd()`, just like _require.resolve()_
+- `nrequire.from(basedir: String)` : Return a new module instance which do the same work but resolving modules from `basedir`
