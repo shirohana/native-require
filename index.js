@@ -20,8 +20,14 @@ function NativeRequire (options = {}) {
   nativeRequire.extensions = Module._extensions
   nativeRequire.cache = Module._cache
 
+  // Support custom basedir
+  nativeRequire.from = function (basedir) {
+    return NativeRequire({ basedir })
+  }
+
   return nativeRequire
 }
 
 const instance = NativeRequire()
+
 module.exports = instance
