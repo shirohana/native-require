@@ -1,6 +1,7 @@
 const Module = require('module')
 
-function NativeRequire (options = {}) {
+function NativeRequire (options) {
+  options = options || {};
   const basedir = (typeof options.basedir === 'string' ? options.basedir : process.cwd())
   const nativeModule = {
     id: '<repl>',
@@ -22,7 +23,9 @@ function NativeRequire (options = {}) {
 
   // Support custom basedir
   nativeRequire.from = function (basedir) {
-    return NativeRequire({ basedir })
+    return NativeRequire({
+      basedir: basedir
+    })
   }
 
   return nativeRequire
