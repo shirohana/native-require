@@ -1,6 +1,6 @@
 const Module = require('module')
 
-function NativeRequire(options) {
+function NativeRequire (options) {
   options = options || {};
   const basedir = (typeof options.basedir === 'string' ? options.basedir : process.cwd())
   const nativeModule = {
@@ -14,7 +14,7 @@ function NativeRequire(options) {
   }
 
   const nativeRequire = Module.prototype.require.bind(nativeModule)
-  nativeRequire.resolve = function(request) {
+  nativeRequire.resolve = function (request) {
     return Module._resolveFilename(request, nativeModule)
   }
   nativeRequire.main = process.mainModule
@@ -22,7 +22,7 @@ function NativeRequire(options) {
   nativeRequire.cache = Module._cache
 
   // Support custom basedir
-  nativeRequire.from = function(basedir) {
+  nativeRequire.from = function (basedir) {
     return NativeRequire({
       basedir: basedir
     })
