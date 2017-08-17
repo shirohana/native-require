@@ -9,10 +9,8 @@ With this module, you can require from external `node_modules` without getting a
 ## Quick usage
 #### Install
 ```sh
-// Using with `webpack-node-externals`
-$ npm install --save native-require
-
-// Using without `webpack-node-externals`
+$ yarn add -D native-require
+// or
 $ npm install --save-dev native-require
 ```
 
