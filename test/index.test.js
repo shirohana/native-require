@@ -10,6 +10,25 @@ test('Simple test', t => {
   t.is(nrequire.resolve('chalk'), require.resolve('chalk'))
 })
 
+test('Throw custom Errors', t => {
+  const name = 'non-exists-module'
+  const basedir = __dirname
+
+  try {
+    nrequire('non-exists-module')
+    t.fail()
+  } catch (err) {
+    t.is(err.message,  `Cannot find module '${name}' from '${basedir}'`)
+  }
+
+  try {
+    nrequire.resolve('non-exists-module')
+    t.fail()
+  } catch (err) {
+    t.is(err.message,  `Cannot find module '${name}' from '${basedir}'`)
+  }
+})
+
 test('Default basedir', t => {
   const fixture = nrequire.from('./fixtures')
 
