@@ -6,6 +6,9 @@
   "repository": "https://github.com/shirohana/native-require/",
   "author": "Hana Shiro <shirohana0608@gmail.com>",
   "license": "MIT",
+  "files": [
+    "index.js"
+  ],
   "keywords": [
     "webpack",
     "require",
