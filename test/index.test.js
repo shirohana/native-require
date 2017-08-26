@@ -11,11 +11,8 @@ test('Simple test', t => {
 })
 
 test('Default basedir', t => {
-  if (version.startsWith('1.0')) {
-    // Default basedir is process.cwd() below ^1.0.*
-    const fixture = nrequire.from('./test/fixtures')
+  const fixture = nrequire.from('./fixtures')
 
-    t.is(fixture('./gotcha'), 'Gotcha!')
-    t.is(fixture.resolve('./gotcha'), require.resolve('./fixtures/gotcha'))
-  }
+  t.is(fixture.require('./gotcha'), 'Gotcha!')
+  t.is(fixture.resolve('./gotcha'), require.resolve('./fixtures/gotcha'))
 })

@@ -1,33 +1,36 @@
 native-require
 ==============
-> Requiring external node modules in Webpack
+*Resolve requires in easy way*
 
-When you're creating a library and packed with Webpack, you usually have to dynamic require some .js files which user provided.
+Getting started
+---------------
 
-With this module, you can require from external `node_modules` without getting a 'Critical dependency' warning.
-
-## Quick usage
-#### Install
 ```sh
-$ yarn add -D native-require
-// or
-$ npm install --save-dev native-require
+$ npm install native-require --save-dev
 ```
 
-#### Use in your code
+#### Require or Resolve from where you want
+
 ```javascript
-// Simple use
-const nrequire = require('native-require')
-nrequire('axios')
-nrequire.resolve('axios')
+import nrequire from 'native-require'
 
-// Resolve from another dir. (useful in helper modules)
-const nrequire = require('native-require').from(userProvidedBasedir)
-nrequire('axios')
-nrequire.resolve('axios')
+// Normal use but helpful to require externals
+const axios = nrequire('axios')
+
+// Require from specified basedir
+const model = nrequire.from('./src/model')
+
+const User = model('./user')
+const Production = model.require('./production') // <-- Alias
 ```
 
-## API
-- `nrequire(path: String)` : Require module from `process.cwd()`, just like _require()_
-- `nrequire.resolve(request: String)` : Resolve module dir from `process.cwd()`, just like _require.resolve()_
-- `nrequire.from(basedir: String)` : Return a new module instance which do the same work but resolving modules from `basedir`
+API
+---
+
+- `nrequire(request)`
+
+- `.require(request)`
+
+- `.resolve(request)`
+
+- `.from(basedir)`

@@ -4,9 +4,25 @@ const path = require('path');
 // To solve relative requirings and resolvings for `nrequire.from`
 const NON_EXISTS_FILENAME = '__native_require__';
 
+function basedirOf (options) {
+  let basedir = null;
+
+  if (module.parent && typeof module.parent.filename === 'string') {
+    basedir = path.dirname(module.parent.filename);
+  } else {
+    basedir = process.cwd();
+  }
+
+  if (typeof options.basedir === 'string') {
+    basedir = path.join(basedir, options.basedir);
+  }
+
+  return basedir;
+}
+
 function nativeRequire (_options) {
   const options = _options || {};
-  const basedir = (typeof options.basedir === 'string' ? path.resolve(options.basedir) : process.cwd());
+  const basedir = basedirOf(options);
   const nmodule = {
     id: '<repl>',
     exports: {},
@@ -17,10 +33,13 @@ function nativeRequire (_options) {
     paths: Module._nodeModulePaths(basedir)
   };
 
-  const nrequire = Object.assign(Module.prototype.require.bind(nmodule), {
+  const nrequire = Module.prototype.require.bind(nmodule);
+
+  Object.assign(nrequire, {
     main: process.mainModule,
     extensions: Module._extensions,
     cache: Module._cache,
+    require: nrequire,
     resolve: function resolve (request) {
       return Module._resolveFilename(request, nmodule);
     },
