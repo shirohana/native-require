@@ -33,10 +33,13 @@ function nativeRequire (_options) {
     paths: Module._nodeModulePaths(basedir)
   };
 
-  const nrequire = Object.assign(Module.prototype.require.bind(nmodule), {
+  const nrequire = Module.prototype.require.bind(nmodule);
+
+  Object.assign(nrequire, {
     main: process.mainModule,
     extensions: Module._extensions,
     cache: Module._cache,
+    require: nrequire,
     resolve: function resolve (request) {
       return Module._resolveFilename(request, nmodule);
     },
