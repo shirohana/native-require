@@ -1,13 +1,18 @@
 const Module = require('module')
+const path = require('path')
+
+// To solve relative requirings and resolvings for `nrequire.from`
+const NON_EXISTS_FILENAME = '__native_require__'
 
 function NativeRequire (options) {
   options = options || {};
-  const basedir = (typeof options.basedir === 'string' ? options.basedir : process.cwd())
+  const basedir = (typeof options.basedir === 'string' ? path.resolve(options.basedir) : process.cwd())
+
   const nativeModule = {
     id: '<repl>',
     exports: {},
     parent: undefined,
-    filename: null,
+    filename: path.join(basedir, NON_EXISTS_FILENAME),
     loaded: false,
     children: [],
     paths: Module._nodeModulePaths(basedir)
