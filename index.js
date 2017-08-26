@@ -36,7 +36,16 @@ function nativeRequire (_options) {
     paths: Module._nodeModulePaths(options.basedir)
   };
 
-  const nrequire = Module.prototype.require.bind(nmodule);
+  const nrequire = function require (request) {
+    try {
+      return Module.prototype.require.call(nmodule, request);
+    } catch (err) {
+      if (err.code === 'MODULE_NOT_FOUND') {
+        err.message += ' from \'' + options.basedir + '\'';
+      }
+      throw err;
+    }
+  };
 
   Object.assign(nrequire, {
     main: process.mainModule,
@@ -44,7 +53,14 @@ function nativeRequire (_options) {
     cache: Module._cache,
     require: nrequire,
     resolve: function resolve (request) {
-      return Module._resolveFilename(request, nmodule);
+      try {
+        return Module._resolveFilename(request, nmodule);
+      } catch (err) {
+        if (err.code === 'MODULE_NOT_FOUND') {
+          err.message += ' from \'' + options.basedir + '\'';
+        }
+        throw err;
+      }
     },
     from: function from (_basedir) {
       return nativeRequire({
