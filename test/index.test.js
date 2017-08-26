@@ -13,6 +13,6 @@ test('Simple test', t => {
 test('Default basedir', t => {
   const fixture = nrequire.from('./fixtures')
 
-  t.is(fixture('./gotcha'), 'Gotcha!')
+  t.is(fixture.require('./gotcha'), 'Gotcha!')
   t.is(fixture.resolve('./gotcha'), require.resolve('./fixtures/gotcha'))
 })
