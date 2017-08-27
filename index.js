@@ -15,8 +15,10 @@ function initOptions (_options) {
     basedir = process.cwd(); // Required from Node CLI
   }
 
-  if (typeof options.basedir === 'string' && !path.isAbsolute(options.basedir)) {
-    options.basedir = path.join(basedir, options.basedir);
+  if (typeof options.basedir === 'string') {
+    if (!path.isAbsolute(options.basedir)) {
+      options.basedir = path.join(basedir, options.basedir);
+    }
   } else {
     options.basedir = basedir;
   }
