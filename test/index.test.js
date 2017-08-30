@@ -29,8 +29,15 @@ test('Throw custom Errors', t => {
   }
 })
 
-test('Default basedir', t => {
+test('Relative basedir', t => {
   const fixture = nrequire.from('./fixtures')
+
+  t.is(fixture.require('./gotcha'), 'Gotcha!')
+  t.is(fixture.resolve('./gotcha'), require.resolve('./fixtures/gotcha'))
+})
+
+test('Absolute basedir', t => {
+  const fixture = nrequire.from(join(__dirname, 'fixtures'))
 
   t.is(fixture.require('./gotcha'), 'Gotcha!')
   t.is(fixture.resolve('./gotcha'), require.resolve('./fixtures/gotcha'))
