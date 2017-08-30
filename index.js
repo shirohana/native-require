@@ -4,24 +4,19 @@ const path = require('path');
 // To solve relative requirings and resolvings for `nrequire.from`
 const NON_EXISTS_FILENAME = '__native_require__';
 
+function resolveBasedir (basedir) {
+  if (path.isAbsolute(basedir)) {
+    return basedir;
+  } else if (module.parent && typeof module.parent.filename === 'string') {
+    return path.join(path.dirname(module.parent.filename), basedir); // Required from module
+  }
+  return path.join(process.cwd(), basedir); // Required from Node CLI
+}
+
 function initOptions (_options) {
   // Shallow copy to prevent side effect
   const options = (typeof _options === 'object') ? Object.assign({}, _options) : {};
-  let basedir = null;
-
-  if (module.parent && typeof module.parent.filename === 'string') {
-    basedir = path.dirname(module.parent.filename); // Required from module
-  } else {
-    basedir = process.cwd(); // Required from Node CLI
-  }
-
-  if (typeof options.basedir === 'string') {
-    if (!path.isAbsolute(options.basedir)) {
-      options.basedir = path.join(basedir, options.basedir);
-    }
-  } else {
-    options.basedir = basedir;
-  }
+  options.basedir = resolveBasedir(options.basedir || '');
 
   return options;
 }
