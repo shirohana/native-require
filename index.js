@@ -4,6 +4,8 @@ const path = require('path');
 // To solve relative requirings and resolvings for `nrequire.from`
 const NON_EXISTS_FILENAME = '__native_require__';
 
+const cache = {};
+
 function resolveBasedir (basedir) {
   if (path.isAbsolute(basedir)) {
     return basedir;
@@ -60,9 +62,11 @@ function nativeRequire (_options) {
       }
     },
     from: function from (_basedir) {
-      return nativeRequire({
-        basedir: _basedir
-      });
+      const basedir = resolveBasedir(_basedir);
+
+      return cache[basedir] || (cache[basedir] = nativeRequire({
+        basedir: basedir
+      }));
     }
   });
 
