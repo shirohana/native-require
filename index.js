@@ -7,12 +7,15 @@ const NON_EXISTS_FILENAME = '__native_require__';
 const cache = {};
 
 function resolveBasedir (basedir) {
+  /* istanbul ignore else */
   if (path.isAbsolute(basedir)) {
     return basedir;
   } else if (module.parent && typeof module.parent.filename === 'string') {
     return path.join(path.dirname(module.parent.filename), basedir); // Required from module
   }
-  return path.join(process.cwd(), basedir); // Required from Node CLI
+
+  /* istanbul ignore next : Required from Node CLI */
+  return path.join(process.cwd(), basedir);
 }
 
 function initOptions (_options) {
@@ -39,6 +42,7 @@ function nativeRequire (_options) {
     try {
       return Module.prototype.require.call(nmodule, request);
     } catch (err) {
+      /* istanbul ignore else : if else, do nothing */
       if (err.code === 'MODULE_NOT_FOUND') {
         err.message += ' from \'' + options.basedir + '\'';
       }
@@ -55,6 +59,7 @@ function nativeRequire (_options) {
       try {
         return Module._resolveFilename(request, nmodule);
       } catch (err) {
+        /* istanbul ignore else : if else, do nothing */
         if (err.code === 'MODULE_NOT_FOUND') {
           err.message += ' from \'' + options.basedir + '\'';
         }
