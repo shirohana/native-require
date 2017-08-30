@@ -10,11 +10,11 @@
     "index.js"
   ],
   "keywords": [
-    "webpack",
-    "require",
-    "node_modules",
     "node",
-    "externals"
+    "require",
+    "resolve",
+    "externals",
+    "node_modules"
   ],
   "scripts": {
     "test": "npm run lint && nyc ava --verbose test/ && nyc report --reporter=html",
