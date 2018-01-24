@@ -19,16 +19,17 @@
   "scripts": {
     "test": "npm run lint && nyc ava --verbose test/ && nyc report --reporter=html",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "lint": "eslint --ext .js index.js",
+    "lint": "standard index.js && eslint --config .eslintrc-ava.js test/",
     "precommit": "npm run lint"
   },
   "devDependencies": {
     "ava": "^0.22.0",
     "chalk": "^2.1.0",
     "codecov": "^2.3.0",
-    "eslint": "^4.5.0",
-    "eslint-config-es5": "^0.5.0",
+    "eslint": "^4.16.0",
+    "eslint-plugin-ava": "^4.5.0",
     "husky": "^0.14.3",
-    "nyc": "^11.1.0"
+    "nyc": "^11.1.0",
+    "standard": "^10.0.3"
   }
 }
