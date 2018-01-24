@@ -1,78 +1,75 @@
-const Module = require('module');
-const path = require('path');
+const Module = require('module')
+const path = require('path')
 
-// To solve relative requirings and resolvings for `nrequire.from`
-const NON_EXISTS_FILENAME = '__native_require__';
+// To solve relative requires and resolves from `_require.from`
+const UNIQUE_FILENAME = '__NATIVE_REQUIRE__'
 
-const cache = {};
+const cache = {}
 
 function resolveBasedir (basedir) {
-  if (path.isAbsolute(basedir)) {
-    return basedir;
-  } else if (module.parent && typeof module.parent.filename === 'string') {
-    return path.join(path.dirname(module.parent.filename), basedir); // Required from module
-  }
-  return path.join(process.cwd(), basedir); // Required from Node CLI
+  /* istanbul ignore next: `module.parent` will be undefined when required from Node CLI */
+  const moduleBasedir = (module.parent && module.parent.filename ? path.dirname(module.parent.filename) : process.cwd())
+  return (basedir ? path.resolve(moduleBasedir, basedir) : moduleBasedir)
 }
 
-function initOptions (_options) {
-  // Shallow copy to prevent side effect
-  const options = (typeof _options === 'object') ? Object.assign({}, _options) : {};
-  options.basedir = resolveBasedir(options.basedir || '');
-
-  return options;
+function initOptions (_opt) {
+  const opt = _opt || {}
+  const options = {}
+  options.basedir = resolveBasedir(opt.basedir)
+  return options
 }
 
-function nativeRequire (_options) {
-  const options = initOptions(_options);
-  const nmodule = {
+function nativeRequire (opt) {
+  const options = initOptions(opt)
+  const _module = {
     id: '<repl>',
     exports: {},
     parent: module.parent,
-    filename: path.join(options.basedir, NON_EXISTS_FILENAME),
+    filename: path.join(options.basedir, UNIQUE_FILENAME),
     loaded: false,
     children: [],
     paths: Module._nodeModulePaths(options.basedir)
-  };
+  }
 
-  const nrequire = function require (request) {
+  function _require (request) {
     try {
-      return Module.prototype.require.call(nmodule, request);
+      return Module.prototype.require.call(_module, request)
     } catch (err) {
+      /* istanbul ignore else */
       if (err.code === 'MODULE_NOT_FOUND') {
-        err.message += ' from \'' + options.basedir + '\'';
+        err.message += ` from '${options.basedir}'`
       }
-      throw err;
+      throw err
     }
-  };
+  }
 
-  Object.assign(nrequire, {
+  Object.assign(_require, {
     main: process.mainModule,
     extensions: Module._extensions,
     cache: Module._cache,
-    require: nrequire,
-    resolve: function resolve (request) {
+    require: _require,
+    resolve: function (request) {
       try {
-        return Module._resolveFilename(request, nmodule);
+        return Module._resolveFilename(request, _module)
       } catch (err) {
+        /* istanbul ignore else */
         if (err.code === 'MODULE_NOT_FOUND') {
-          err.message += ' from \'' + options.basedir + '\'';
+          err.message += ` from '${options.basedir}'`
         }
-        throw err;
+        throw err
       }
     },
-    from: function from (_basedir) {
-      const basedir = resolveBasedir(_basedir);
-
+    from: function (from) {
+      const basedir = resolveBasedir(from)
       return cache[basedir] || (cache[basedir] = nativeRequire({
         basedir: basedir
-      }));
+      }))
     }
-  });
+  })
 
-  return nrequire;
+  return _require
 }
 
-const instance = nativeRequire();
+const instance = nativeRequire()
 
-module.exports = instance;
+module.exports = instance

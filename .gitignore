@@ -6,3 +6,7 @@ node_modules
 
 # Compiled files
 dist
+
+# Coverage
+coverage
+.nyc_output
